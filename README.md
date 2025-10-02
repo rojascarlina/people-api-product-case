@@ -30,12 +30,12 @@ flowchart TD
 ## How to use
 
 - Click **Open in Swagger Editor** (badge above) to explore the API contract.  
-  Direct link: https://editor.swagger.io/?url=https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/openapi/people-absences-api.yaml
+  Direct link: https://editor.swagger.io/?url=https://raw.githubusercontent.com/rojascarlina/people-api-product-case/main/openapi/people-absences-api.yaml
 - Review the **one-pager** and the **30-60-90** in `/docs`:
   - One-pager: [docs/one-pager.md](docs/one-pager.md)
   - 30-60-90: [docs/30-60-90.md](docs/30-60-90.md)
 - (Optional) Import the **Postman collection** to try the endpoints:
-  https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/openapi/postman_collection.json
+  https://raw.githubusercontent.com/rojascarlina/people-api-product-case/main/openapi/postman_collection.json
 
 
 ## Why this matters
@@ -54,9 +54,9 @@ You can explore the contract in **Swagger UI** or **ReDoc** in seconds:
 ### Demo rápida
 
 👉 **Abrir OpenAPI en Swagger (1 clic):**  
-https://editor.swagger.io/?url=https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/people-absences-api.yaml
+https://editor.swagger.io/?url=https://raw.githubusercontent.com/rojascarlina/people-api-product-case/main/people-absences-api.yaml
 
-**Postman (RAW):** https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/postman_collection.json
+**Postman (RAW):** https://raw.githubusercontent.com/rojascarlina/people-api-product-case/main/postman_collection.json
 
 
 **Option B — ReDoc (online viewer):**
