@@ -74,6 +74,6 @@ docker run -p 8080:8080 -e SWAGGER_JSON=/foo/people-absences-api.yaml       -v $
 ---
 
 ## NOTICE
-Este repositorio es un **caso de producto personal** para evaluación.
-No está afiliado ni patrocinado por **Inditex**. Todas las marcas mencionadas
-pertenecen a sus respectivos propietarios.
+This repository is a personal product case study for evaluation only.
+It is not affiliated with, sponsored by, or endorsed by Inditex.
+All trademarks are the property of their respective owners.
