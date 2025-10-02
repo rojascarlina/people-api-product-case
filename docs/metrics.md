@@ -64,19 +64,24 @@ Este documento define las **métricas mínimas** para gestionar una **People API
 sum(rate(http_requests_total{status=~"5.."}[5m])) by (route)
 /
 sum(rate(http_requests_total[5m])) by (route)
+
 %4xx por endpoint (últimos 5 min):
+
 sum(rate(http_requests_total{status=~"4.."}[5m])) by (route)
 /
 sum(rate(http_requests_total[5m])) by (route)
+
 Latencia p95:
 histogram_quantile(
   0.95,
   sum(rate(http_request_duration_seconds_bucket[5m])) by (le, route)
 )
+
 Por versión y cliente (ejemplo %5xx):
 sum(rate(http_requests_total{status=~"5.."}[5m])) by (route, version, client_id)
 /
 sum(rate(http_requests_total[5m])) by (route, version, client_id)
+
 Alertas (reglas simples y efectivas)
 Errores 5xx:
 ALERT api_5xx_high IF %5xx > 0.1% DURING 15m
@@ -96,6 +101,7 @@ RFC-7807 (application/problem+json) para respuestas de error consistentes:
   "instance": "/v1/absences/requests"
 }
 Registra request_id, client_id, version, country, y motivo (reason) para analizar picos de 4xx.
+
 4) Umbrales/objetivos sugeridos (tabla)
 | Métrica                 | Objetivo guía                         | Comentario                                   |
 | ----------------------- | ------------------------------------- | -------------------------------------------- |
