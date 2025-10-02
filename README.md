@@ -1,12 +1,13 @@
 # People API — Product Case (People)
 
+[![Open in Swagger Editor](https://img.shields.io/badge/Open%20in-Swagger%20Editor-85EA2D?logo=swagger&logoColor=white)](https://editor.swagger.io/?url=https://raw.githubusercontent.com/rojascarlina/people-api-product-case/main/openapi/people-absences-api.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Author:** Carlina — Technical Product Manager (Producto API)  
-**Context:** Product approach to build a **People API** from scratch (discovery → contract-first (OpenAPI) → governance → multi‑client → metrics).
+**Context:** Product approach to build a **People API** from scratch (discovery → contract-first (OpenAPI) → governance → multi-client → metrics).
 
 > This repository is a concise portfolio artifact to share with recruiters/tech customer teams.  
-> It contains: a minimal **OpenAPI** spec, a **30‑60‑90** plan, and a one‑pager.
+> It contains: a minimal **OpenAPI** spec, a **30-60-90** plan, and a one-pager.
 
 ## Índice
 - 📄 [One-pager](docs/one-pager.md)
@@ -14,7 +15,6 @@
 - 📊 [Métricas API](docs/metrics.md)
 - 🔐 [OpenAPI v1 (YAML)](openapi/people-absences-api.yaml)
 - 🔧 [Postman collection](openapi/postman_collection.json)
-
 
 ## Quick Preview
 ```mermaid
