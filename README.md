@@ -1,5 +1,7 @@
 # People APIs — Product Case (Inditex · People)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **Author:** Carlina — Technical Product Manager (APIs)  
 **Context:** Product approach to build a **People API** from scratch (discovery → contract-first (OpenAPI) → governance → multi‑client → metrics).
 
@@ -64,3 +66,9 @@ docker run -p 8080:8080 -e SWAGGER_JSON=/foo/people-absences-api.yaml       -v $
 ## Postman
 - Import `openapi/postman_collection.json` into Postman.
 - Set `{{base_url}}`, `{{access_token}}`, and variables as needed.
+---
+
+## NOTICE
+Este repositorio es un **caso de producto personal** para evaluación.
+No está afiliado ni patrocinado por **Inditex**. Todas las marcas mencionadas
+pertenecen a sus respectivos propietarios.
