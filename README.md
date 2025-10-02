@@ -44,9 +44,13 @@ flowchart TD
 You can explore the contract in **Swagger UI** or **ReDoc** in seconds:
 
 **Option A — Online (no install):**
-1. Open https://editor.swagger.io/
-2. File → Import File → select `openapi/people-absences-api.yaml`
-3. Use the "Try it out" feature with a mock server if needed.
+### Demo rápida
+
+👉 **Abrir OpenAPI en Swagger (1 clic):**  
+https://editor.swagger.io/?url=https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/people-absences-api.yaml
+
+**Postman (RAW):** https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/postman_collection.json
+
 
 **Option B — ReDoc (online viewer):**
 - Use any ReDoc online viewer and paste the *raw* URL of the YAML once the repo is public.
