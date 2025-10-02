@@ -8,7 +8,7 @@ Todas las novedades de este proyecto. Formato inspirado en **Keep a Changelog** 
 - **Quickstart** (TTFHW < 30 min).
 - **Metrics** doc (p95, %4xx/%5xx, TTFHW, SLO).
 - **CI** de contrato (Spectral + Redocly).
-- README con **Swagger 1-clic** y enlaces.
+- README con **Swagger 1-click** y otros enlaces.
 
 <!-- Ejemplo de próximas entradas:
 ## [1.1.0] - 2025-11-15
