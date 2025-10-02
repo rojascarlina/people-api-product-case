@@ -63,3 +63,5 @@ Este documento define las **métricas mínimas** para gestionar una **People API
 sum(rate(http_requests_total{status=~"5.."}[5m])) by (route)
 /
 sum(rate(http_requests_total[5m])) by (route)
+```promql
+
