@@ -1,0 +1,154 @@
+openapi: 3.0.3
+info:
+  title: People Absences API
+  version: "1.0.0"
+  description: >
+    Minimal contract-first API for People Absences MVP (multi-country).
+    Includes idempotency, OAuth2/OIDC, webhook events and deprecation header.
+servers:
+  - url: https://api.example.com
+paths:
+  /v1/absences/requests:
+    post:
+      summary: Create an absence request
+      operationId: createAbsenceRequest
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbsenceRequest'
+      responses:
+        "201":
+          description: Created
+          headers:
+            Sunset:
+              description: Optional deprecation date for this operation
+              schema: { type: string, format: date-time }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Absence'
+        "400":
+          description: Problem Details
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+  /v1/employees/{id}/absences:
+    get:
+      summary: List absences for an employee
+      operationId: listEmployeeAbsences
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: from
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          schema: { type: string, format: date }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Absence' }
+  /v1/policies/{country}/absence-types:
+    get:
+      summary: Country absence types
+      operationId: listAbsenceTypes
+      parameters:
+        - in: path
+          name: country
+          required: true
+          schema: { type: string, minLength: 2, maxLength: 2, example: ES }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/AbsenceType' }
+  /v1/absences/{id}/approve:
+    post:
+      summary: Approve an absence
+      operationId: approveAbsence
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Absence' }
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/oauth/token
+          scopes:
+            absences:full: Full access to absences
+  schemas:
+    AbsenceRequest:
+      type: object
+      required: [employeeId, type, startDate, endDate]
+      properties:
+        employeeId: { type: string }
+        type:
+          type: string
+          enum: [VACATION, SICKNESS, PARENTAL, OTHER]
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        country: { type: string, minLength: 2, maxLength: 2, example: ES }
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Optional extensions for country/client specifics
+    Absence:
+      type: object
+      properties:
+        id: { type: string }
+        employeeId: { type: string }
+        type: { type: string }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+        status: { type: string, enum: [PENDING, APPROVED, REJECTED] }
+        balanceAfter: { type: number, format: float, nullable: true }
+    AbsenceType:
+      type: object
+      properties:
+        code: { type: string }
+        name: { type: string }
+        requiresDocument: { type: boolean }
+    Problem:
+      type: object
+      required: [title, status]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+security:
+  - oauth2: [absences:full]

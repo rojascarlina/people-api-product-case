@@ -1,0 +1,153 @@
+{
+  "info": {
+    "name": "People Absences API (MVP)",
+    "_postman_id": "c4a3b7a4-0000-4000-9000-demo",
+    "description": "Collection to try the Absences MVP endpoints (contract-first).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create absence request",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Idempotency-Key",
+            "value": "{{idempotency_key}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/absences/requests",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "absences",
+            "requests"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"emp-123\",\n  \"type\": \"VACATION\",\n  \"startDate\": \"2025-10-06\",\n  \"endDate\": \"2025-10-10\",\n  \"country\": \"ES\",\n  \"metadata\": {\n    \"note\": \"example\"\n  }\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List employee absences",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/employees/{{employee_id}}/absences?from=2025-10-01&to=2025-10-31",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "employees",
+            "{{employee_id}}",
+            "absences"
+          ],
+          "query": [
+            {
+              "key": "from",
+              "value": "2025-10-01"
+            },
+            {
+              "key": "to",
+              "value": "2025-10-31"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Country absence types",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/policies/ES/absence-types",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "policies",
+            "ES",
+            "absence-types"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Approve absence",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/v1/absences/{{absence_id}}/approve",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "v1",
+            "absences",
+            "{{absence_id}}",
+            "approve"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.example.com"
+    },
+    {
+      "key": "access_token",
+      "value": "YOUR_TOKEN_HERE"
+    },
+    {
+      "key": "employee_id",
+      "value": "emp-123"
+    },
+    {
+      "key": "idempotency_key",
+      "value": "demo-unique-key"
+    },
+    {
+      "key": "absence_id",
+      "value": "abs-123"
+    }
+  ]
+}
