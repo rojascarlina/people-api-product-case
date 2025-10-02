@@ -1,21 +1,20 @@
-# People APIs — Product Case (Inditex · People)
+# People APIs — Product Case (People)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Author:** Carlina — Technical Product Manager (APIs)  
+**Author:** Carlina — Technical Product Manager (Producto API)  
 **Context:** Product approach to build a **People API** from scratch (discovery → contract-first (OpenAPI) → governance → multi‑client → metrics).
 
-> This repository is a concise portfolio artifact to share with recruiters/hiring teams.  
-> It contains: a 6‑slide deck, a minimal **OpenAPI** spec, a **30‑60‑90** plan, and a one‑pager.
+> This repository is a concise portfolio artifact to share with recruiters/tech customer teams.  
+> It contains: a minimal **OpenAPI** spec, a **30‑60‑90** plan, and a one‑pager.
 
-## Contents
-- `slides/` — 6‑slide deck: *People APIs — Enfoque de Producto desde Cero* (PPTX)
-- `openapi/people-absences-api.yaml` — Minimal OpenAPI v1 for **Absences** (People)
-- `docs/30-60-90.md` — 30‑60‑90 plan to deliver a measurable MVP
-- `docs/one-pager.md` — One‑pager with positioning
-- `docs/metrics.md` — Health & performance metrics per endpoint
-- `LICENSE` — MIT
-- `.gitignore` — common ignores
+## Índice
+- 📄 [One-pager](docs/one-pager.md)
+- 🗓️ [30-60-90](docs/30-60-90.md)
+- 📊 [Métricas API](docs/metrics.md)
+- 🔐 [OpenAPI v1 (YAML)](openapi/people-absences-api.yaml)
+- 🔧 [Postman collection](openapi/postman_collection.json)
+
 
 ## Quick Preview
 ```mermaid
@@ -29,9 +28,15 @@ flowchart TD
 ```
 
 ## How to use
-- Share this repo link with the recruiter (e.g., **Aroa**).  
-- Point them to the **deck** and the **OpenAPI** file.  
-- Optional: run the spec in Swagger UI or ReDoc to visualize (any online viewer works with raw YAML).
+
+- Click **Open in Swagger Editor** (badge above) to explore the API contract.  
+  Direct link: https://editor.swagger.io/?url=https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/openapi/people-absences-api.yaml
+- Review the **one-pager** and the **30-60-90** in `/docs`:
+  - One-pager: [docs/one-pager.md](docs/one-pager.md)
+  - 30-60-90: [docs/30-60-90.md](docs/30-60-90.md)
+- (Optional) Import the **Postman collection** to try the endpoints:
+  https://raw.githubusercontent.com/rojascarlina/people-inditex-apis-product-case/main/openapi/postman_collection.json
+
 
 ## Why this matters
 - **Contract‑first** enables speed + quality across teams and countries.  
