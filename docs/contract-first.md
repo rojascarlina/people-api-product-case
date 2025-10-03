@@ -262,6 +262,7 @@ paths:
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
+```
 
 ## 4) Idempotencia y concurrencia
 
@@ -311,6 +312,8 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
+```
+
 ## 5) Esquemas (nombres y formatos)
 
 - **Nomenclatura JSON:** `camelCase` para propiedades; `PascalCase` para `schemas`.
@@ -480,3 +483,4 @@ components:
           type: object
           additionalProperties: true
           description: Optional local/customer-specific fields on stored entity
+```
