@@ -1,6 +1,6 @@
 # Contract-first: convenciones y guías (People API)
 
-Este documento define **cómo diseñamos y evolucionamos** la People API en modo **contract-first** usando **OpenAPI** como única fuente de verdad.
+Este documento define **cómo diseñamos y evolucionamos** la People API en modo **contract-first** usando **OpenAPI**.
 
 ---
 
@@ -48,39 +48,221 @@ paths:
                   items:
                     type: array
                     items: { $ref: '#/components/schemas/Absence' }
+
 ## 3) Paths & Methods (CRUD)
 
-| Acción                | Verbo   | Ejemplo                                         |
-|----------------------|---------|--------------------------------------------------|
-| Crear                | `POST`  | `/v1/absences/requests`                          |
-| Leer (colección)     | `GET`   | `/v1/employees/{id}/absences?from=&to=`          |
-| Leer (detalle)       | `GET`   | `/v1/absences/{absenceId}`                       |
-| Actualizar parcial   | `PATCH` | `/v1/absences/{absenceId}`                       |
-| Aprobación/acciones  | `POST`  | `/v1/absences/{absenceId}/approve`               |
+### Resumen de operaciones
+| Acción                | Verbo   | Path                                          |
+|----------------------|---------|-----------------------------------------------|
+| Crear solicitud      | `POST`  | `/v1/absences/requests`                       |
+| Listar por empleado  | `GET`   | `/v1/employees/{employeeId}/absences`         |
+| Obtener detalle      | `GET`   | `/v1/absences/{absenceId}`                    |
+| Actualizar parcial   | `PATCH` | `/v1/absences/{absenceId}`                    |
+| Aprobar solicitud    | `POST`  | `/v1/absences/{absenceId}/approve`            |
 
 **Paginación/filtrado**
-- Paginación: `?page=1&limit=50` (o `cursor` si esperas >100k).
-- Ordenación: `?sort=createdAt&order=desc`.
-- Filtros: campos explícitos (evitar búsqueda libre en v1).
+- Paginación basada en **page/limit** o **cursor** (no mezclar en la misma operación).
+- Filtros explícitos (evitar búsqueda libre en v1).
+- Ordenación con `?sort=createdAt&order=desc`.
 
-**Ejemplo (OpenAPI fragmento)**
+---
+
+### OpenAPI — Endpoints (fragmentos listos)
+
 ```yaml
 paths:
-  /v1/absences/{absenceId}/approve:
+  /v1/absences/requests:
     post:
-      summary: Approve absence
+      summary: Create absence request
+      operationId: createAbsenceRequest
+      tags: [Absences]
+      parameters:
+        - $ref: '#/components/headers/Idempotency-Key'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AbsenceRequest' }
+            examples:
+              example:
+                value:
+                  employeeId: emp_123
+                  type: VACATION
+                  startDate: 2025-10-06
+                  endDate: 2025-10-10
+                  country: ES
+                  reason: Family trip
+      responses:
+        "201":
+          description: Created
+          headers:
+            Idempotency-Key: { $ref: '#/components/headers/Idempotency-Key' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Absence' }
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        "409":
+          description: Conflict (duplicate idempotency key or business conflict)
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+  /v1/employees/{employeeId}/absences:
+    get:
+      summary: List absences by employee
+      operationId: listEmployeeAbsences
+      tags: [Absences]
+      parameters:
+        - in: path
+          name: employeeId
+          required: true
+          schema: { type: string }
+        - in: query
+          name: from
+          required: true
+          schema: { type: string, format: date }
+        - in: query
+          name: to
+          required: true
+          schema: { type: string, format: date }
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1 }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 200 }
+        - in: query
+          name: cursor
+          schema: { type: string }
+        - in: query
+          name: sort
+          schema: { type: string, enum: [createdAt, startDate] }
+        - in: query
+          name: order
+          schema: { type: string, enum: [asc, desc], default: desc }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Absence' }
+                  pageInfo:
+                    $ref: '#/components/schemas/PageInfo'
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+  /v1/absences/{absenceId}:
+    get:
+      summary: Get absence by id
+      operationId: getAbsence
+      tags: [Absences]
       parameters:
         - in: path
           name: absenceId
           required: true
           schema: { type: string }
       responses:
-        "200": { description: Approved }
-        "409":
-          description: Conflict (already approved/invalid state)
+        "200":
+          description: OK
+          headers:
+            ETag:
+              description: Weak ETag for concurrency control
+              schema: { type: string, example: 'W/"abs_987-v3"' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Absence' }
+        "404":
+          description: Not Found
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
+
+    patch:
+      summary: Patch absence (status transitions, metadata)
+      operationId: patchAbsence
+      tags: [Absences]
+      parameters:
+        - in: path
+          name: absenceId
+          required: true
+          schema: { type: string }
+        - in: header
+          name: If-Match
+          required: true
+          schema: { type: string, example: 'W/"abs_987-v3"' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                status:
+                  $ref: '#/components/schemas/AbsenceStatus'
+                reason:
+                  type: string
+                  maxLength: 500
+      responses:
+        "200":
+          description: Updated
+          headers:
+            ETag:
+              description: New ETag after update
+              schema: { type: string, example: 'W/"abs_987-v4"' }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Absence' }
+        "400":
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        "412":
+          description: Precondition Failed (ETag mismatch)
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+  /v1/absences/{absenceId}/approve:
+    post:
+      summary: Approve absence
+      operationId: approveAbsence
+      tags: [Absences, Actions]
+      parameters:
+        - in: path
+          name: absenceId
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Approved
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Absence' }
+        "409":
+          description: Conflict (invalid state transition)
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        "404":
+          description: Not Found
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
 ## 4) Idempotencia y concurrencia
 
 - **Idempotencia** en creación: header **`Idempotency-Key` obligatorio** para `POST` que crean recursos (permite reintentos seguros sin duplicar).
