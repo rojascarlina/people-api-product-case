@@ -48,7 +48,7 @@ paths:
                   items:
                     type: array
                     items: { $ref: '#/components/schemas/Absence' }
-
+```
 ## 3) Paths & Methods (CRUD)
 
 ### Resumen de operaciones
