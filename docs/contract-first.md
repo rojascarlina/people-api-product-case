@@ -1,24 +1,25 @@
-# Contract-first: convenciones y guías (People API)
+# Contract-first: Conventions and Guidelines (People API)
 
-Este documento define **cómo diseñamos y evolucionamos** la People API en modo **contract-first** usando **OpenAPI**.
-
----
-
-## 1) Principios
-- **Contract-first**: el contrato (OpenAPI) se acuerda antes de implementar.
-- **Predecible**: recursos claros, nombres consistentes, errores estándar.
-- **Retrocompatibilidad**: cambios “additive” en v1; “breaking” → v2.
-- **DX**: TTFHW < 30’; ejemplos listos, Postman, Swagger 1-clic.
+This document defines **how we design and evolve** the People API in **contract-first** mode using **OpenAPI**.
 
 ---
 
-## 2) Modelado de recursos
-- **Nombres en plural** y **sustantivos**: `/v1/employees`, `/v1/absences`.
-- **Jerarquía cuando aplica**: `/v1/employees/{employeeId}/absences`.
-- **Identificadores opacos**: `emp_123`, `abs_987`.
-- **Extensiones por país**: evitar forks; usar campos opcionales o un bloque `extensions`.
+## 1) Principles
+- **Contract-first**: the contract (OpenAPI) is agreed upon before implementation.
+- **Predictable**: clear resources, consistent naming, standard errors.
+- **Backward compatibility**: “additive” changes in v1; “breaking” → v2.
+- **DX**: TTFHW < 30’; ready-to-use examples, Postman, Swagger one-click.
 
-**Ejemplo (OpenAPI fragmento)**
+---
+
+## 2) Resource Modeling
+- **Plural** and **noun-based** names: `/v1/employees`, `/v1/absences`.
+- **Hierarchy when applicable**: `/v1/employees/{employeeId}/absences`.
+- **Opaque identifiers**: `emp_123`, `abs_987`.
+- **Country-specific extensions**: avoid forks; use optional fields or an `extensions` block.
+
+
+**Example (OpenAPI fragmento)**
 ```yaml
 paths:
   /v1/employees/{employeeId}/absences:
@@ -51,19 +52,19 @@ paths:
 ```
 ## 3) Paths & Methods (CRUD)
 
-### Resumen de operaciones
-| Acción                | Verbo   | Path                                          |
+### Operations Summary
+| Action               | Verb    | Path                                          |
 |----------------------|---------|-----------------------------------------------|
-| Crear solicitud      | `POST`  | `/v1/absences/requests`                       |
-| Listar por empleado  | `GET`   | `/v1/employees/{employeeId}/absences`         |
-| Obtener detalle      | `GET`   | `/v1/absences/{absenceId}`                    |
-| Actualizar parcial   | `PATCH` | `/v1/absences/{absenceId}`                    |
-| Aprobar solicitud    | `POST`  | `/v1/absences/{absenceId}/approve`            |
+| Create request       | `POST`  | `/v1/absences/requests`                       |
+| List by employee     | `GET`   | `/v1/employees/{employeeId}/absences`         |
+| Get details          | `GET`   | `/v1/absences/{absenceId}`                    |
+| Partial update       | `PATCH` | `/v1/absences/{absenceId}`                    |
+| Approve request      | `POST`  | `/v1/absences/{absenceId}/approve`            |
 
-**Paginación/filtrado**
-- Paginación basada en **page/limit** o **cursor** (no mezclar en la misma operación).
-- Filtros explícitos (evitar búsqueda libre en v1).
-- Ordenación con `?sort=createdAt&order=desc`.
+**Pagination/Filtering**
+- Pagination based on **page/limit** or **cursor** (do not mix within the same operation).
+- Explicit filters (avoid free-text search in v1).
+- Sorting with `?sort=createdAt&order=desc`.
 
 ---
 
