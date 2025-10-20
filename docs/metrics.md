@@ -148,30 +148,31 @@ Registra `request_id`, `client_id`, `version`, `country` y el **motivo** (`reaso
 
 ## 5) Using Metrics for Product Decisions
 
-- **%4xx alto** → ¿Contrato confuso? Añade ejemplos, valida server-side con mensajes útiles, revisa auth/rate limit, **Quickstart** más claro.  
-- **%5xx/p95 alto** → Incidencia técnica: dependencias, caché, índices, colas, escalado, **idempotencia** y **backoff**.  
-- **TTFHW alto** → Falta de Quickstart, Postman sin variables, auth confusa, errores poco explicativos.  
-- **Adopción v2 baja** → Ajustar plan de migración, **Sunset header**, guía de cambios y período de convivencia.
+- **High %4xx** → Contract confusion? Add examples, validate server-side with useful messages, review auth/rate limits, make Quickstart clearer.  
+- **High %5xx/p95** → Technical issue: dependencies, cache, indexes, queues, scaling, idempotency, and backoff.  
+- **High TTFHW** → Missing Quickstart, Postman without variables, confusing auth, poor error messages.  
+- **Low v2 adoption** → Adjust migration plan, use Sunset header, add changelog and coexistence period.
 
 ---
 
-## 6) Ejemplo de objetivos por fase
+## 6) Example Targets by Phase
 
-**MVP (0–90 días)**
-- Instrumentación base, dashboards por endpoint/versión/cliente.  
-- **%5xx ≤ 0.5%**, **%4xx ≤ 2%**, **p95** dentro de target en 2 países piloto.  
+**MVP (0–90 days)**
+- Base instrumentation, dashboards by endpoint/version/client.  
+- **%5xx ≤ 0.5%**, **%4xx ≤ 2%**, **p95** within target for 2 pilot countries.  
 - **TTFHW < 30 min**, Postman + Quickstart.
 
-**Escala (90–180 días)**
-- Alertas activas, reportes por país/cliente y versión.  
-- Deprecation policy con `Sunset`, adopción monitorizada.  
-- Onboarding por país **↓ 30–50%** respecto a baseline.
+**Scale (90–180 days)**
+- Active alerts, reports by country/client/version.  
+- Deprecation policy with `Sunset`, monitored adoption.  
+- Onboarding per country **↓ 30–50%** vs baseline.
 
 ---
 
-## 7) Glosario rápido
-- **p95/p99:** percentil 95/99 del tiempo de respuesta.  
-- **TTFHW:** *Time To First Hello World* (primer éxito del integrador).  
-- **SLO/SLA:** objetivo de servicio / acuerdo de nivel de servicio.  
-- **RFC-7807:** formato estándar de errores (Problem Details).  
-- **Sunset:** cabecera HTTP para comunicar deprecación futura.
+## 7) Quick Glossary
+
+- **p95/p99:** 95th/99th percentile of response time.  
+- **TTFHW:** *Time To First Hello World* (integrator’s first success).  
+- **SLO/SLA:** service level objective / service level agreement.  
+- **RFC-7807:** standard error format (Problem Details).  
+- **Sunset:** HTTP header used to announce upcoming deprecation.
