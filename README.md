@@ -12,18 +12,18 @@
 ## Índice
 - 📄 [One-pager](docs/one-pager.md)
 - 🗓️ [30-60-90](docs/30-60-90.md)
-- 📊 [Métricas API](docs/metrics.md)
+- 📊 [Metrics API](docs/metrics.md)
 - 🔐 [OpenAPI v1 (YAML)](openapi/people-absences-api.yaml)
 - 🔧 [Postman collection](openapi/postman_collection.json)
 
 ## Quick Preview
 ```mermaid
 flowchart TD
-  A[Discovery multi-país] --> B[Modelo de dominio]
+  A[Discovery multi-country] --> B[Domain Model]
   B --> C[Contrato OpenAPI v1]
   C --> D[Portal dev + sandbox + webhooks]
-  D --> E[Pilotos 2 países]
-  E --> F[Observabilidad: %4xx/%5xx, p95]
+  D --> E[Pilots 2 countries]
+  E --> F[Observability: %4xx/%5xx, p95]
   F --> G[Governance & deprecations]
 ```
 
