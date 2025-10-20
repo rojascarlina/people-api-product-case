@@ -1,84 +1,84 @@
 # API Health, Performance & DX Metrics
 
-Este documento define las **métricas mínimas** para gestionar una **People API** como producto: salud, rendimiento y experiencia del integrador (DX). Incluye **objetivos**, **cómo instrumentar** y **alertas** recomendadas.
+This document defines the **minimum metrics** to manage a **People API** as a product: health, performance, and developer experience (DX). It includes **objectives**, **how to instrument**, and **recommended alerts**.
 
 ---
 
-## 1) Métricas principales (por endpoint / versión / cliente)
+## 1) Core Metrics (per endpoint / version / client)
 
-### %4xx — Errores de cliente
-- **Qué es:** porcentaje de respuestas con códigos **4xx** (400, 401, 403, 404, 409, 422, 429…).
-- **Qué indica:** contrato mal entendido, validaciones, auth, rate limits, rutas incorrectas.
-- **Objetivo guía:** **≤ 1–2%** semanal (puede ser >2% en login/permiso si hay intentos fallidos esperables).
-- **Fórmula:**
+### %4xx — Client Errors
+- **What it is:** percentage of responses with **4xx** status codes (400, 401, 403, 404, 409, 422, 429…).
+- **What it indicates:** misunderstood contract, validation issues, auth errors, rate limits, incorrect routes.
+- **Target guideline:** **≤ 1–2%** weekly (can be >2% for login/permissions if failed attempts are expected).
+- **Formula:**
 ```
-%4xx = (nº respuestas 4xx / nº total respuestas) × 100
-```
-
-### %5xx — Errores de servidor
-- **Qué es:** porcentaje de respuestas **5xx** (500, 502, 503, 504…).
-- **Qué indica:** fallos del lado servidor: timeouts con dependencias, bugs, saturación.
-- **Objetivo guía:** **≤ 0.1–0.5%** semanal (aspirar a **≈ 0%**).
-- **Fórmula:**
-```
-%5xx = (nº respuestas 5xx / nº total respuestas) × 100
+%4xx = (nº responses 4xx / nº total responses) × 100
 ```
 
-### Latencia p95 (y p99) — Rendimiento
-- **Qué es:** percentil 95 (o 99) del tiempo de respuesta por operación.
-- **Por qué p95:** refleja la experiencia real sin distorsión de outliers.
-- **Objetivos guía:**
-  - **GET** (lectura): **p95 ≤ 250–400 ms**
-  - **POST/PUT** (escritura): **p95 ≤ 500–800 ms**
-  - Operaciones People complejas (cálculos/reglas multi-país) pueden tolerar hasta ~1 s, pero **vigilar tendencia**.
-- **Nota:** monitorea **p99** para detectar colas/incidentes.
+### %5xx — Server Errors
+- **What it is:** percentage of responses with **5xx** status codes (500, 502, 503, 504…).
+- **What it indicates:** server-side issues — timeouts with dependencies, bugs, overload.
+- **Target guideline:** **≤ 0.1–0.5%** weekly (aim for **≈ 0%**).
+- **Formula:**
+```
+%5xx = (nº responses 5xx / nº total responses) × 100
+```
 
-### Disponibilidad (SLA/SLO)
-- **Definición rápida:** % de tiempo en que los endpoints cumplen objetivos de error/latencia.
-- **Ejemplo SLO:** `Disponibilidad mensual ≥ 99.9%` para operaciones críticas (crear solicitud de ausencia, consultar saldos).
+### p95 (and p99) Latency — Performance
+- **What it is:** 95th (or 99th) percentile of response time per operation.
+- **Why p95:** reflects real experience without distortion from outliers.
+- **Target guidelines:**
+  - **GET** (read): **p95 ≤ 250–400 ms**
+  - **POST/PUT** (write): **p95 ≤ 500–800 ms**
+  - Complex People operations (multi-country rules/calculations) may tolerate up to ~1 s, but **monitor trends**.
+- **Note:** track **p99** to detect queues/incidents.
+
+### Availability (SLA/SLO)
+- **Quick definition:** % of time endpoints meet error/latency targets.
+- **Example SLO:** `Monthly availability ≥ 99.9%` for critical operations (create absence request, check balances).
 
 ---
 
-## 2) Métricas de DX (Developer Experience)
+## 2) DX Metrics (Developer Experience)
 
 ### TTFHW — *Time To First Hello World*
-- **Qué es:** tiempo desde que un integrador abre el Quickstart hasta su **primera llamada exitosa** (200/201).
-- **Objetivo guía:** **< 30 min** (si auth/compliance compleja: **< 60 min**).
-- **Cómo reducirlo:** OpenAPI + Swagger/Redoc, colección Postman con variables (`base_url`, `token`, `Idempotency-Key`), Quickstart 5 pasos, errores RFC-7807 claros, sandbox.
+- **What it is:** time from when an integrator opens the Quickstart to their **first successful API call** (200/201).
+- **Target guideline:** **< 30 min** (if complex auth/compliance: **< 60 min**).
+- **How to reduce it:** OpenAPI + Swagger/Redoc, Postman collection with variables (`base_url`, `token`, `Idempotency-Key`), 5-step Quickstart, clear RFC-7807 errors, sandbox.
 
-### Onboarding de cliente/país (días)
-- **Qué es:** tiempo desde kick-off hasta primer flujo en producción.
-- **Objetivo guía:** tendencia **↓**; reportar por país para ver dónde duele.
+### Client/Country Onboarding (days)
+- **What it is:** time from kick-off to first production flow.
+- **Target guideline:** downward trend **↓**; report by country to identify friction points.
 
-### Adopción por versión
-- **Qué es:** uso relativo de **v1** vs **v2** (y eventos de deprecación).
-- **Objetivo guía:** migraciones con plan y **cero sorpresas**.
+### Version Adoption
+- **What it is:** relative usage of **v1** vs **v2** (and deprecation events).
+- **Target guideline:** planned migrations with **zero surprises**.
 
 ---
 
-## 3) Cómo instrumentar (práctico)
+## 3) How to Instrument (Practical)
 
-### Dimensiones recomendadas
-- `endpoint`/`route`, `method`, `version` (v1, v2), `client_id` (integrador), `country`, `status_code`, `request_id`.
-- **Correlación:** guarda `request_id`/`trace_id` en logs para saltar de métrica → traza → log.
+### Recommended Dimensions
+- `endpoint`/`route`, `method`, `version` (v1, v2), `client_id` (integrator), `country`, `status_code`, `request_id`.
+- **Correlation:** store `request_id`/`trace_id` in logs to jump from metric → trace → log.
 
-### Ejemplos Prometheus (PromQL)
+### Prometheus Examples (PromQL)
 
-**%5xx por endpoint (últimos 5 min)**
+**%5xx per endpoint (last 5 min)**
 ```promql
 sum(rate(http_requests_total{status=~"5.."}[5m])) by (route)
 / 
 sum(rate(http_requests_total[5m])) by (route)
 ```
 
-**%4xx por endpoint (últimos 5 min)**
+**%4xx por endpoint (last 5 min)**
 ```promql
 sum(rate(http_requests_total{status=~"4.."}[5m])) by (route)
 / 
 sum(rate(http_requests_total[5m])) by (route)
 ```
 
-**Latencia p95**
+**Latency p95**
 ```promql
 histogram_quantile(
   0.95,
@@ -86,38 +86,38 @@ histogram_quantile(
 )
 ```
 
-**Por versión y cliente (ejemplo %5xx)**
+**By version and client (example %5xx)**
 ```promql
 sum(rate(http_requests_total{status=~"5.."}[5m])) by (route, version, client_id)
 / 
 sum(rate(http_requests_total[5m])) by (route, version, client_id)
 ```
 
-### Alertas (reglas simples y efectivas)
+### Alerts (Simple and Effective Rules)
 
-**Errores 5xx**
+**Errors 5xx**
 ```txt
 ALERT api_5xx_high IF %5xx > 0.1% DURING 15m
 ```
 
-**Errores 4xx (contrato/DX)**
+**Errors 4xx (contrato/DX)**
 ```txt
 ALERT api_4xx_high IF %4xx > 2% DURING 60m
 ```
 
-**Latencia p95**
+**Latency p95**
 ```txt
 ALERT api_latency_p95_high IF p95 > objetivo DURING 15m
 ```
 
-**Disponibilidad (SLO)**
+**Availability (SLO)**
 ```txt
-Alerta por incumplimiento mensual o por “error budget”.
+Alert for monthly breach or “error budget” exhaustion..
 ```
 
-### Logging & errores (DX)
+### Logging & errors (DX)
 
-**RFC-7807** (`application/problem+json`) para respuestas de error consistentes:
+**RFC-7807** (`application/problem+json`) for consistent error responses:
 ```json
 {
   "type": "https://api.example.com/problems/validation",
@@ -132,21 +132,21 @@ Registra `request_id`, `client_id`, `version`, `country` y el **motivo** (`reaso
 
 ---
 
-## 4) Umbrales/objetivos sugeridos (tabla)
+## 4) Suggested thresholds/targets (table)
 
-| Métrica                  | Objetivo guía                         | Comentario                                        |
+| Metric                  | Guiding Objetive                         | Comment                                        |
 |-------------------------|---------------------------------------|---------------------------------------------------|
-| %5xx por endpoint       | ≤ **0.1–0.5%** semanal                | Buscar ≈0%; revisar dependencias/timeouts         |
-| %4xx por endpoint       | ≤ **1–2%** semanal                    | >2% → revisar contrato, auth, validaciones        |
-| p95 GET                 | ≤ **250–400 ms**                      | Observar p99 para outliers                        |
-| p95 POST/PUT            | ≤ **500–800 ms**                      | People complejo puede subir a ~1 s (vigilar)      |
+| %5xx por endpoint       | ≤ **0.1–0.5%** semanal                | Search ≈0%; review dependencies/timeouts         |
+| %4xx por endpoint       | ≤ **1–2%** semanal                    | >2% → review contract, auth, validations        |
+| p95 GET                 | ≤ **250–400 ms**                      | Monitor p99 for outliers                       |
+| p95 POST/PUT            | ≤ **500–800 ms**                      | Complex People ops up to ~1 s (watch trend)      |
 | TTFHW                   | **< 30 min** (*< 60 min* si complejo) | OpenAPI + Postman + Quickstart                    |
-| Onboarding cliente/país | Tendencia **↓**                       | Track por país/partner                            |
-| Disponibilidad (SLO)    | **≥ 99.9%** operaciones críticas      | Definir por endpoint                              |
+| Onboarding client/country | Trend **↓**                       | Track by country/partner                            |
+| Availability (SLO)    | **≥ 99.9%** operaciones críticas      | Define by endpoint                              |
 
 ---
 
-## 5) Uso de métricas para decisiones de producto
+## 5) Using Metrics for Product Decisions
 
 - **%4xx alto** → ¿Contrato confuso? Añade ejemplos, valida server-side con mensajes útiles, revisa auth/rate limit, **Quickstart** más claro.  
 - **%5xx/p95 alto** → Incidencia técnica: dependencias, caché, índices, colas, escalado, **idempotencia** y **backoff**.  
