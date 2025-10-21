@@ -20,7 +20,7 @@
 ```mermaid
 flowchart TD
   A[Discovery multi-country] --> B[Domain Model]
-  B --> C[Contrato OpenAPI v1]
+  B --> C[Contract OpenAPI v1]
   C --> D[Portal dev + sandbox + webhooks]
   D --> E[Pilots 2 countries]
   E --> F[Observability: %4xx/%5xx, p95]
